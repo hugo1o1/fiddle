@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="target"></div>
+</body>
+
+</html>
+
+<script>
+  const sleep = (callback, time = 10) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        callback()
+        resolve()
+      }, time)
+    })
+  }
+
+  const target = document.querySelector('#target')
+  const fragment = new DocumentFragment()
+
+  // new Array(1000000).fill(0).forEach(() => {
+  //   const p = document.createElement('p')
+  //   p.innerText = Math.random()
+  //   fragment.appendChild(p)
+  // })
+  // target.appendChild(fragment)
+  let callback = () => {
+    const p = document.createElement('p')
+    p.innerText = Math.random()
+    fragment.appendChild(p)
+  }
+
+  let next = sleep(callback)
+  for (let i = 0; i < 1000; i++) {
+    next = next.then(() => sleep(callback))
+  }
+  next.finally(() => {
+    target.appendChild(fragment)
+  })
+
+</script>

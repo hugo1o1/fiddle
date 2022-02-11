@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script>
+
+  const requests = Array(300).fill('').map((_, i) => new Promise((resolve) => {
+    const delay = Math.round(Math.random() * 2000)
+    setTimeout(() => {
+      resolve(`success,delay:${delay}`)
+    }, delay);
+  }))
+  function debounceRequests(requests, maxConcurrency, maxWaiting) {
+    let index = 0
+    const getOne = () => {
+      if (index > requests.length - 1) return
+      Promise.race([requests[index], new Promise((_, reject) => {
+        setTimeout(() => {
+          reject()
+        }, maxWaiting)
+      })])
+        .then((res) => {
+          console.log('这个成功了', res);
+        })
+        .catch((res) => {
+          console.log('这个超时了');
+        }).finally(() => {
+          index++
+          getOne()
+        })
+    }
+    for (let i = 0; i < maxConcurrency; i++) {
+      getOne()
+    }
+  }
+  debounceRequests(requests, 100, 1000)
+
+</script>

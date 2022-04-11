@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <form action="">
+    <label for="rows">rows</label>
+    <input name='rows' type="text" id='rows' />
+    <label for="columns">columns</label>
+    <input name='columns' type="text" id='columns' />
+    <input type="submit" value="submit" id='submit' onclick="createTable()">
+  </form>
+  <table id='table'>
+  </table>
+</body>
+
+</html>
+
+<script>
+  /**
+   * rows 4 columns 5
+   * 
+   * 1 8 9  16 17  even: colIndex * rows + 1 odd: (colIndex + 1 )* rows
+   * 2 7 10 15 18 
+   * 3 6 11 14 19  even: colIndex * rows + rowIndex + 1 
+   * 4 5 12 13 20  odd: (colIndex + 1) * rows - rowIndex 
+   * 
+  */
+
+  document.querySelector('#submit').addEventListener('click', (e) => {
+    e.preventDefault()
+  })
+
+  function createTable() {
+    const rows = +document.getElementById("rows").value
+    const columns = +document.getElementById("columns").value
+
+    let table = document.getElementById('table')
+    let matrix = []
+    let tableHtml = ''
+    for (let i = 0; i < rows; i++) {
+      matrix[i] = Array(columns)
+      tableHtml += "<tr>"
+      for (let j = 0; j < columns; j++) {
+        matrix[i][j] =
+          j % 2 === 0 ?
+            j * rows + i + 1
+            : (j + 1) * rows - i
+
+        tableHtml += `<td>${matrix[i][j]}</td>`
+      }
+      tableHtml += "</tr>"
+    }
+    document.getElementById('table').innerHTML = tableHtml
+
+  }
+</script>
